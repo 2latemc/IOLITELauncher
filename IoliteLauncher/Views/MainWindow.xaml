@@ -18,7 +18,7 @@
         </ListView>
 
         <StackPanel Grid.Column="1">
-            <Button>Open Project</Button>
+            <Button Click="OpenProject">Open Project</Button>
             <ListView></ListView>
         </StackPanel>
     </Grid>

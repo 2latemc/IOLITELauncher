@@ -10,6 +10,8 @@ namespace IoLiteLauncher.Backend;
 public class SettingsManager {
     public SettingsData SettingsData = new SettingsData();
 
+    public string ExecutablePath => Path.Combine(SettingsData.EnginePath + ExecutableName);
+
     public readonly string ExecutableName = "Iolite.exe";
 
     private string _settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),

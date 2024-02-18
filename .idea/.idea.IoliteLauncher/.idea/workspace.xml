@@ -84,6 +84,8 @@
       <workItem from="1708276689087" duration="6814000" />
       <workItem from="1708286536800" duration="1648000" />
       <workItem from="1708289093669" duration="1639000" />
+      <workItem from="1708291072605" duration="16000" />
+      <workItem from="1708291399085" duration="243000" />
     </task>
     <servers />
   </component>
@@ -92,24 +94,5 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/IoliteLauncher/Backend/SettingsManager.cs</url>
-          <line>46</line>
-          <properties documentPath="C:\Files\VSProjects\IoliteLauncher\IoliteLauncher\Backend\SettingsManager.cs" initialLine="46" containingFunctionPresentation="Method 'IsValidProjectsPath'">
-            <startOffsets>
-              <option value="1539" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1540" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

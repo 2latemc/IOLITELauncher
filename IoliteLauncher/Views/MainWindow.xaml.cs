@@ -14,5 +14,9 @@ namespace IoliteLauncher.Views {
             settingsWindow.Show();
             Close();
         }
+
+        private void OpenProject(object sender, RoutedEventArgs e) {
+            _instance.ProjectsManager.OpenProject("");
+        }
     }
 }
