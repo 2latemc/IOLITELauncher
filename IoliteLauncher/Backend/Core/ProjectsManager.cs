@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Windows;
 using IoLiteLauncher.Backend;
 
 namespace IoliteLauncher.Backend.Core;
@@ -25,6 +26,7 @@ public class ProjectsManager {
     }
 
     public void OpenProject(string path) {
+        MessageBox.Show(_settingsManager.ExecutablePath);
         Process.Start(_settingsManager.ExecutablePath);
     }
 }

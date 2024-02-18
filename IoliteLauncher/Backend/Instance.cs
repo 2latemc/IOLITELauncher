@@ -13,6 +13,8 @@ public class Instance {
     public LockManager LockManager;
 
     private Instance() {
+        if (_instance == null) _instance = this;
+
         SettingsManager = new SettingsManager();
         LockManager = new LockManager(this);
         ProjectsManager = new ProjectsManager();
