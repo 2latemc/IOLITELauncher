@@ -1,2 +1,2 @@
 # ioliteLauncher
-Launcher for the iolite Game Engine
+Launcher for the [iolite](https://github.com/MissingDeadlines/iolite) Game Engine
