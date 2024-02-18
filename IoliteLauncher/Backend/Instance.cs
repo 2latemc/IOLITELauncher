@@ -5,7 +5,15 @@ namespace IoLiteLauncher.Backend;
 
 public class Instance {
 
-    private static Instance _instance;
+    private static Instance? _instance;
+
+    public SettingsManager SettingsManager;
+    public LockManager LockManager;
+
+    private Instance() {
+        SettingsManager = new SettingsManager();
+        LockManager = new LockManager(this);
+    }
 
     public static Instance Get {
         get {
@@ -14,12 +22,11 @@ public class Instance {
         }
     }
 
-    public static string enginePath;
-    public static List<string> projectsPaths;
-
-    public SettingsManager _settingsManager = new SettingsManager();
-
     public void Init() {
-        _settingsManager.Save();
+        SettingsManager.Load();
+    }
+
+    public void Shutdown() {
+        SettingsManager.Save();
     }
 }
