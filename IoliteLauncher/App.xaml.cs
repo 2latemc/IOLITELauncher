@@ -5,11 +5,17 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using IoLiteLauncher.Backend;
 
-namespace IoliteLauncher {
+namespace IoLiteLauncher {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application {
+        private Instance _instance;
+        private void App_OnStartup(object sender, StartupEventArgs e) {
+            _instance = Instance.Get;
+            _instance.Init();
+        }
     }
 }
