@@ -34,17 +34,18 @@ public class ProjectsManager {
         foreach (var path in _settingsManager.SettingsData.ProjectsPaths) {
             pr.AddRange(GetProjectsAtPath(path));
         }
+
         return pr;
     }
 
     private List<ProjectData> GetProjectsAtPath(string path) {
         List<ProjectData> pr = new List<ProjectData>();
         var result = GetProjectDataAtPath(path);
-        if(result.success) pr.Add(result.data);
+        if (result.success) pr.Add(result.data);
 
         foreach (string directory in Directory.GetDirectories(path)) {
             var r = GetProjectDataAtPath(directory);
-            if(r.success) pr.Add(r.data);
+            if (r.success) pr.Add(r.data);
         }
 
         return pr;
@@ -86,12 +87,14 @@ public class ProjectsManager {
             if (result == MessageBoxResult.Yes) {
                 CloseProject();
             }
-            else {
-                return;
-            }
+            return;
         }
 
-
+        bool success = _lockManager.CreateLock(new LockFile(path, new List<string>(), new List<string>()));
+        if (!success) {
+            MessageBox.Show("Could not create lock file");
+            return;
+        }
         Debug.WriteLine("Starting Engine..");
         Process.Start(_settingsManager.ExecutablePath);
     }

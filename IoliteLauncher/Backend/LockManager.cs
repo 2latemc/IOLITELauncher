@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows;
+using Accessibility;
+using IoliteLauncher.Backend.Core;
+using IoLiteLauncher.Utils;
 using Newtonsoft.Json;
 
 namespace IoLiteLauncher.Backend;
@@ -25,16 +29,15 @@ public class LockManager {
         return !String.IsNullOrEmpty(GetLockProject());
     }
 
-    public bool CreateLock(string projectPath) {
+    public bool CreateLock(LockFile lockFile) {
         if (ContainsLock()) {
             MessageBox.Show("Could not create .lock file: Project already contains a lock file");
             return false;
         }
 
         try {
-            LogFile logFile = new LogFile(projectPath);
-            var json = JsonConvert.SerializeObject(logFile);
-            File.WriteAllText(projectPath, json);
+            var json = JsonConvert.SerializeObject(lockFile, Formatting.Indented);
+            File.WriteAllText(LockPath, json);
             return true;
         }
         catch (Exception e) {
@@ -50,7 +53,7 @@ public class LockManager {
 
         try {
             string lockText = File.ReadAllText(LockPath);
-            return JsonConvert.DeserializeObject<LogFile>(LockPath).ProjectPath;
+            return JsonConvert.DeserializeObject<LockFile>(LockPath).ProjectPath;
         }
         catch (Exception e) {
             MessageBox.Show("Could not check for .lock file with e: " + e.Message);
@@ -59,10 +62,14 @@ public class LockManager {
     }
 }
 
-public struct LogFile {
+public struct LockFile {
     public string ProjectPath;
+    public List<string> AffectedFiles;
+    public List<string> AffectedDirs;
 
-    public LogFile(string projectPath) {
+    public LockFile(string projectPath, List<string> affectedDirs, List<string> affectedFiles) {
         ProjectPath = projectPath;
+        AffectedDirs = affectedDirs;
+        AffectedFiles = affectedFiles;
     }
 }
