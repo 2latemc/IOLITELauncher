@@ -11,10 +11,16 @@ namespace IoLiteLauncher.Backend;
 public class SettingsManager {
     public SettingsData SettingsData = new SettingsData();
 
+    private Instance _instance;
+
     public string ExecutablePath => Path.Combine(SettingsData.EnginePath, Statics.ExecutableName);
 
     private string _settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "IOLauncher", "settings.json");
+
+    public SettingsManager() {
+        _instance = Instance.Get;
+    }
 
     public void Save() {
         bool success = Serializer.ToFile(_settingsPath, SettingsData);
@@ -40,9 +46,15 @@ public class SettingsManager {
             settingsWindow.ShowDialog();
         }
         else {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
+            StartMain();
         }
+    }
+
+    public void StartMain() {
+        _instance.ProjectsManager.MoveTemplateProjects();
+
+        MainWindow mainWindow = new MainWindow();
+        mainWindow.Show();
     }
 
     public bool IsValidProjectsPath(List<string>? projectsPathOverride = null) {

@@ -7,6 +7,9 @@ using System.Windows;
 using IoLiteLauncher.Backend;
 using IoLiteLauncher.Utils;
 using Microsoft.Win32;
+using System.Windows.Forms;
+using Application = System.Windows.Application;
+using MessageBox = System.Windows.MessageBox;
 
 namespace IoliteLauncher.Views;
 
@@ -75,17 +78,30 @@ public partial class SettingsWindow : Window {
         };
         _instance.SettingsManager.Save();
 
-        MainWindow mainWindow = new MainWindow();
-        mainWindow.Show();
+        _instance.SettingsManager.StartMain();
         Close();
     }
+
+
 
     private void Download(object sender, RoutedEventArgs e) {
         Downloader.Download();
     }
 
-    private void Browse(object sender, RoutedEventArgs e) {
-        OpenFileDialog fileDialog = new OpenFileDialog();
-        fileDialog.ShowDialog();
+    private void BrowseEnginePath(object sender, RoutedEventArgs e) {
+        FolderBrowserDialog dialog = new FolderBrowserDialog();
+        var result = dialog.ShowDialog();
+        if (result == System.Windows.Forms.DialogResult.OK) {
+            EngineBox.Text = dialog.SelectedPath;
+        }
+    }
+
+    private void BrowseProjectPath(object sender, RoutedEventArgs e) {
+        FolderBrowserDialog dialog = new FolderBrowserDialog();
+        var result = dialog.ShowDialog();
+        if (result == System.Windows.Forms.DialogResult.OK) {
+            ProjectPathBox.Text = dialog.SelectedPath;
+            ProjectPathEntries.Add(dialog.SelectedPath);
+        }
     }
 }
