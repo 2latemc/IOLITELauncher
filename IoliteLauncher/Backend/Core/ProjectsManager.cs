@@ -21,35 +21,72 @@ public class ProjectsManager {
     }
 
     public void CreateProject() {
-
     }
 
     public void DeleteProject() {
-
     }
 
-    public void RenameProject() {
-
+    public void RenameProject(string projectPath, string newName) {
     }
 
     public List<ProjectData> FetchProjects() {
-        return new List<ProjectData>();
+        List<ProjectData> pr = new List<ProjectData>();
+        foreach (var path in _settingsManager.SettingsData.ProjectsPaths) {
+            pr.AddRange(GetProjectsAtPath(path));
+        }
+        return pr;
     }
 
+    private List<ProjectData> GetProjectsAtPath(string path) {
+        List<ProjectData> pr = new List<ProjectData>();
+        var result = GetProjectDataAtPath(path);
+        if(result.success) pr.Add(result.data);
+
+        foreach (string directory in Directory.GetDirectories(path)) {
+            var r = GetProjectDataAtPath(directory);
+            if(r.success) pr.Add(r.data);
+        }
+
+        return pr;
+    }
+
+    private (ProjectData data, bool success) GetProjectDataAtPath(string path) {
+        foreach (var file in Directory.GetFiles(path)) {
+            if (Utils.IsMetaDataFile(file)) {
+                var meta = MetadataMgmt.GetProjectMetaDataAtPath(file);
+                if (meta == null) {
+                    Debug.WriteLine("Project is null, scipping.");
+                    continue;
+                }
+
+                return (new ProjectData() {
+                    Path = path,
+                    ProjectName = meta.application_name,
+                }, true);
+            }
+        }
+
+        return (default, false);
+    }
+
+
     public struct ProjectData {
-        public string Path;
-        public string ProjectName;
+        public string Path { get; set; }
+        public string ProjectName { get; set; }
     }
 
     private LockManager _lockManager;
+
     public void OpenProject(string path) {
+        MessageBox.Show("Opening " + path);
         if (_lockManager.ContainsLock()) {
             var result =
                 MessageBox.Show("Looks like another Project is currently open. Do you want to try force closing it?",
                     "", MessageBoxButton.YesNo);
             if (result == MessageBoxResult.Yes) {
                 CloseProject();
-            } else {
+            }
+            else {
                 return;
             }
         }
@@ -60,7 +97,6 @@ public class ProjectsManager {
     }
 
     private void CloseProject() {
-
     }
 
 
@@ -76,7 +112,6 @@ public class ProjectsManager {
 
             if (Statics.TemplatePaths.Contains(dirName.ToLower())) {
                 try {
-
                     if (!allowed) {
                         var result = MessageBox.Show(
                             "In order to continue we need to move the Template projects. Would you like to continue?",
@@ -85,20 +120,21 @@ public class ProjectsManager {
                             Application.Current.Shutdown();
                             return;
                         }
-                        allowed = true;
 
+                        allowed = true;
                     }
 
                     string destiPath = Path.Combine(_settingsManager.SettingsData.ProjectsPaths[0], "TemplateProjects");
                     if (!Directory.Exists(destiPath)) Directory.CreateDirectory(destiPath);
                     if (allowed) {
                         foreach (var file in Directory.GetFiles(_settingsManager.SettingsData.EnginePath)) {
-                            if (Path.GetFileName(file).ToLower() == Statics.MetadataFileName.ToLower()) {
+                            if (Utils.IsMetaDataFile(file)) {
                                 File.Move(file, Path.Combine(destiPath, Path.GetFileName(file)));
                             }
                         }
                     }
-                    Directory.Move(dir, Path.Combine(destiPath,dirName));
+
+                    Directory.Move(dir, Path.Combine(destiPath, dirName));
                 }
                 catch (Exception e) {
                     MessageBox.Show("Could not project. " + e.Message);
@@ -106,5 +142,4 @@ public class ProjectsManager {
             }
         }
     }
-
 }

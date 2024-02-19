@@ -4,22 +4,37 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IoLiteLauncher"
+        xmlns:views="clr-namespace:IoliteLauncher.Views"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <!-- <Window.DataContext> -->
+    <!--     <views:MainWindow></views:MainWindow> -->
+    <!-- </Window.DataContext> -->
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        <ListView>
-            <TextBox>ProjectName</TextBox>
-            <Button>Create Project</Button>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBox>ProjectName</TextBox>
+                <Button>Create Project</Button>
+            </StackPanel>
             <Button Click="OpenSettings">Open settings</Button>
-        </ListView>
-
-        <StackPanel Grid.Column="1">
-            <Button Click="OpenProject">Open Project</Button>
-            <ListView></ListView>
         </StackPanel>
+
+        <DockPanel Grid.Row="1">
+            <Button Height="Auto" MinHeight="20px" DockPanel.Dock="Top" Click="OpenProject">Open Project</Button>
+            <ListView DockPanel.Dock="Bottom" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" x:Name="ProjectsList" ItemsSource="{Binding Projects}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock FontSize="13px" Text="{Binding ProjectName}" />
+                            <TextBlock FontSize="10px" Text="{Binding Path}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </DockPanel>
     </Grid>
 </Window>

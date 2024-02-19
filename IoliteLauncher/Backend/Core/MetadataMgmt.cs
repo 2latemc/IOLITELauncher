@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using IoLiteLauncher.Backend;
 
 namespace IoliteLauncher.Backend.Core;
 
@@ -13,5 +14,9 @@ public class MetadataMgmt {
         public string active_data_source = "deprecated"; // This is deprecated and not needed but still needed for loading.
         public string initial_game_state = "Editing";
         public string version_string = "development";
+    }
+
+    public static Project? GetProjectMetaDataAtPath(string metadataFilePath) {
+        return Serializer.FromFile<MetadataMgmt.Project>(metadataFilePath);
     }
 }
