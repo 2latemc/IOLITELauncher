@@ -19,6 +19,7 @@
                 <TextBox x:Name="EngineBox" MinWidth="300" HorizontalAlignment="Stretch">C:/User/IOLITE</TextBox>
                 <Button DockPanel.Dock="Right" Width="50" Click="BrowseEnginePath">Browse</Button>
                 <Button DockPanel.Dock="Right" Width="100" Click="Download">Download Engine</Button>
+                <Button DockPanel.Dock="Right" Width="100" Click="BrowseToEnginePath">Browse to Path</Button>
             </StackPanel>
             <Label Foreground="Red">It is heavily recommended to use a fresh install of the engine or things will break!</Label>
         </StackPanel>

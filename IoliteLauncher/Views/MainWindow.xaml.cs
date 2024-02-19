@@ -3,6 +3,8 @@ using System.Windows;
 using IoLiteLauncher.Backend;
 using IoliteLauncher.Backend.Core;
 using Microsoft.VisualBasic.CompilerServices;
+using System.Windows.Controls;
+using System.Diagnostics;
 
 namespace IoliteLauncher.Views  {
     public partial class MainWindow : Window {
@@ -36,6 +38,13 @@ namespace IoliteLauncher.Views  {
                 return;
             }
             _instance.ProjectsManager.OpenProject(selected.GetValueOrDefault().Path);
+        }
+
+        private void BrowseProjectPathClicked(object sender, RoutedEventArgs e){
+            Button btn = (Button)sender;
+            var item = (ProjectsManager.ProjectData) btn.DataContext;
+            Process.Start("explorer.exe", item.Path);
+
         }
     }
 }

@@ -14,6 +14,9 @@ public class ProjectsManager {
     private Instance _instance;
     private SettingsManager _settingsManager;
 
+
+    private string EnginePath => _settingsManager.SettingsData.EnginePath;
+
     public ProjectsManager() {
         _instance = Instance.Get;
         _settingsManager = _instance.SettingsManager;
@@ -78,8 +81,7 @@ public class ProjectsManager {
 
     private LockManager _lockManager;
 
-    public void OpenProject(string path) {
-        MessageBox.Show("Opening " + path);
+    public void OpenProject(string projPath) {
         if (_lockManager.ContainsLock()) {
             var result =
                 MessageBox.Show("Looks like another Project is currently open. Do you want to try force closing it?",
@@ -87,16 +89,54 @@ public class ProjectsManager {
             if (result == MessageBoxResult.Yes) {
                 CloseProject();
             }
+
             return;
         }
 
-        bool success = _lockManager.CreateLock(new LockFile(path, new List<string>(), new List<string>()));
+        bool success = _lockManager.CreateLock(new LockFile(projPath));
         if (!success) {
             MessageBox.Show("Could not create lock file");
             return;
         }
+
+        if (Utils.DoesDirContainFiles(_settingsManager.SettingsData.EnginePath, Statics.AffectedFileNames)) {
+            _lockManager.ForceRemoveLockFile();
+            MessageBox.Show(
+                "There are still project files in the Engine Path. Please remove / backup the following files: " +
+                String.Join(", ", Statics.AffectedFileNames));
+            return;
+        }
+
+        StartCopy(projPath);
+
         Debug.WriteLine("Starting Engine..");
         Process.Start(_settingsManager.ExecutablePath);
+    }
+
+
+    private void StartCopy(string projPath) {
+        var dirs = Directory.GetDirectories(projPath);
+        var files = Directory.GetFiles(projPath);
+        foreach (string dir in dirs) {
+            Utils.MoveDirectory(dir, EnginePath);
+        }
+
+        foreach (string file in files) {
+            File.Move(file, Path.Combine(EnginePath, Path.GetFileName(file)));
+        }
+    }
+
+
+    public struct ProjectDataStorage {
+        public string ProjectPath;
+        public List<string> AffectedFiles;
+        public List<string> AffectedDirs;
+
+        public ProjectDataStorage(List<string> affectedDirs, List<string> affectedFiles, string projectPath) {
+            AffectedDirs = affectedDirs;
+            AffectedFiles = affectedFiles;
+            ProjectPath = projectPath;
+        }
     }
 
     private void CloseProject() {

@@ -54,6 +54,19 @@ public class SettingsManager {
         _instance.ProjectsManager.MoveTemplateProjects();
 
         MainWindow mainWindow = new MainWindow();
+        foreach (string path in SettingsData.ProjectsPaths) {
+            try {
+                string warningPath = Path.Combine(path, Statics.WarningFileName);
+                if (!File.Exists(warningPath)) {
+                    File.WriteAllText(warningPath,
+                        "Never ever edit anything in here while the project is opened, your changes will be overriden! Only change anything in the .json files if you really know what you are doing.");
+                }
+            }
+            catch {
+                MessageBox.Show("couldnt create warning files");
+            }
+        }
+
         mainWindow.Show();
     }
 

@@ -28,10 +28,13 @@
             <ListView DockPanel.Dock="Bottom" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" x:Name="ProjectsList" ItemsSource="{Binding Projects}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel>
-                            <TextBlock FontSize="13px" Text="{Binding ProjectName}" />
-                            <TextBlock FontSize="10px" Text="{Binding Path}" />
-                        </StackPanel>
+                        <DockPanel HorizontalAlignment="Stretch">
+                            <Button DockPanel.Dock="Right" Click="BrowseProjectPathClicked">Browse</Button>
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock FontSize="13px" Text="{Binding ProjectName}" />
+                                <TextBlock FontSize="10px" Text="{Binding Path}" />
+                            </StackPanel>
+                        </DockPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

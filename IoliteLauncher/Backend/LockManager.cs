@@ -23,6 +23,17 @@ public class LockManager {
         }
     }
 
+    public void ForceRemoveLockFile() {
+        try {
+            if (File.Exists(LockPath))
+                File.Delete(LockPath);
+        }
+        catch(Exception e) {
+            MessageBox.Show("Could not delete lock file with e " + e.Message);
+            return;
+        }
+    }
+
     public bool ContainsLock() {
         if (_instance == null) _instance = Instance.Get;
 
@@ -53,7 +64,7 @@ public class LockManager {
 
         try {
             string lockText = File.ReadAllText(LockPath);
-            return JsonConvert.DeserializeObject<LockFile>(LockPath).ProjectPath;
+            return JsonConvert.DeserializeObject<LockFile>(lockText).ProjectPath;
         }
         catch (Exception e) {
             MessageBox.Show("Could not check for .lock file with e: " + e.Message);
@@ -64,12 +75,8 @@ public class LockManager {
 
 public struct LockFile {
     public string ProjectPath;
-    public List<string> AffectedFiles;
-    public List<string> AffectedDirs;
 
-    public LockFile(string projectPath, List<string> affectedDirs, List<string> affectedFiles) {
+    public LockFile(string projectPath) {
         ProjectPath = projectPath;
-        AffectedDirs = affectedDirs;
-        AffectedFiles = affectedFiles;
     }
 }

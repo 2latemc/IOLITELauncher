@@ -104,4 +104,8 @@ public partial class SettingsWindow : Window {
             ProjectPathEntries.Add(dialog.SelectedPath);
         }
     }
+
+    private void BrowseToEnginePath(object sender, RoutedEventArgs e) {
+        Process.Start("explorer.exe", EngineBox.Text);
+    }
 }
