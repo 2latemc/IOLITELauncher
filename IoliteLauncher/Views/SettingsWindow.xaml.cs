@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using IoLiteLauncher.Backend;
+using IoLiteLauncher.Utils;
+using Microsoft.Win32;
 
 namespace IoliteLauncher.Views;
 
@@ -75,5 +78,14 @@ public partial class SettingsWindow : Window {
         MainWindow mainWindow = new MainWindow();
         mainWindow.Show();
         Close();
+    }
+
+    private void Download(object sender, RoutedEventArgs e) {
+        Downloader.Download();
+    }
+
+    private void Browse(object sender, RoutedEventArgs e) {
+        OpenFileDialog fileDialog = new OpenFileDialog();
+        fileDialog.ShowDialog();
     }
 }

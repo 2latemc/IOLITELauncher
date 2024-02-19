@@ -6,23 +6,28 @@
         xmlns:local="clr-namespace:IoliteLauncher.Views"
         mc:Ignorable="d"
         Title="Settings" Height="450" Width="800">
-    <Grid>
+    <Grid Margin="20px">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto" MinHeight="50"></RowDefinition>
+            <RowDefinition Height="15px"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <ListView>
-            <Label>Engine Path</Label>
-            <TextBox x:Name="EngineBox">C:/User/IOLITE</TextBox>
-        </ListView>
-        <ListView Grid.Row="1">
-            <Button Click="RemoveElementButton">Remove Element</Button>
-            <Button Click="AddProjectPathElementButton">Add Element</Button>
-            <TextBox x:Name="ProjectPathBox">Path to add</TextBox>
-            <ListView x:Name="ProjectPathList" FlowDirection="RightToLeft" ItemsSource="{Binding ProjectPathEntries}">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+            <Label Width="Auto">Engine Path</Label>
+            <TextBox MinWidth="500px" x:Name="EngineBox" HorizontalAlignment="Stretch">C:/User/IOLITE</TextBox>
+            <Button Click="Download">Download Engine</Button>
+            <Button Click="Browse">Browse</Button>
+        </StackPanel>
+        <StackPanel Grid.Row="2">
+            <StackPanel Orientation="Horizontal">
+                <Button Click="RemoveElementButton">Remove Element</Button>
+                <Button Click="AddProjectPathElementButton">Add Element</Button>
+                <TextBox x:Name="ProjectPathBox">Path to add</TextBox>
+            </StackPanel>
+            <ListView MinHeight="30px" Background="Gray" x:Name="ProjectPathList" ItemsSource="{Binding ProjectPathEntries}">
             </ListView>
-        </ListView>
-        <Button Click="Submit" Grid.Row="2">Apply</Button>
+        </StackPanel>
+        <Button Click="Submit" Grid.Row="3">Apply</Button>
     </Grid>
 </Window>

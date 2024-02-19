@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
+using IoLiteLauncher.Utils;
 using IoliteLauncher.Views;
 
 namespace IoLiteLauncher.Backend;
@@ -10,9 +11,7 @@ namespace IoLiteLauncher.Backend;
 public class SettingsManager {
     public SettingsData SettingsData = new SettingsData();
 
-    public string ExecutablePath => Path.Combine(SettingsData.EnginePath, ExecutableName);
-
-    public readonly string ExecutableName = "Iolite.exe";
+    public string ExecutablePath => Path.Combine(SettingsData.EnginePath, Statics.ExecutableName);
 
     private string _settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "IOLauncher", "settings.json");
@@ -80,7 +79,7 @@ public class SettingsManager {
 
         try {
             foreach (string file in Directory.GetFiles(path)) {
-                if (Path.GetFileName(file).ToLower().Equals(ExecutableName.ToLower())) {
+                if (Path.GetFileName(file).ToLower().Equals(Statics.ExecutableName.ToLower())) {
                     return true;
                 }
             }
