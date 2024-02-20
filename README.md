@@ -4,6 +4,7 @@
 ## Installation:
 - Make sure you have a **fresh** install of the engine. Otherwise things will break.
 - Make sure you are running on the release [V.0.4.8](https://media.missing-deadlines.com/iolite/builds/release/iolite-v0.4.8.exe) of the Engine as things might not work with later engine versions (Currently (20.02.2024) this is the latest release)
+- **Never** open the Iolite.exe manually, always open a proejct through the launcher
 - If you select an Engine install with template project, those will be converted in their own project stored at the first element of your project path list.
 
 ## How it works:
