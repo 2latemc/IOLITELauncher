@@ -1,5 +1,5 @@
 # ioliteLauncher
-# Unofficial Launcher for the [iolite](https://github.com/MissingDeadlines/iolite) Game Engine
+# Unofficial Launcher for the [iolite](https://iolite-engine.com/) Game Engine
 
 ## Installation:
 - Make sure you have a **fresh** install of the engine. Otherwise things will break.
