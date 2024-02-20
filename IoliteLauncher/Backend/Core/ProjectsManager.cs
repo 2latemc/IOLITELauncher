@@ -28,7 +28,44 @@ public class ProjectsManager {
         _lockManager = _instance.LockManager;
     }
 
-    public void CreateProject() {
+
+    public string ProjectDefaultTemplatePath => Path.Combine(Statics.AppDataPath, Statics.DefaultProjectTemplateFolderName);
+
+    public bool CreateProject(ProjectCreateOptions options) {
+        var destiPath = Path.Combine(_settingsManager.SettingsData.ProjectsPaths[0], options.Name);
+        if (Directory.Exists(destiPath)) {
+            MessageBox.Show("Project path already exists!");
+            return false;
+        }
+
+        try {
+            Directory.CreateDirectory(destiPath);
+
+            Utils.MoveDirectoryContents(ProjectDefaultTemplatePath, destiPath, true);
+
+            ReplaceMetadataFileContents(options, destiPath);
+
+            OpenProject(destiPath);
+            return true;
+        }
+        catch (Exception e) {
+            MessageBox.Show("Could not create project with E: " + e.Message);
+            return false;
+        }
+    }
+
+    private static void ReplaceMetadataFileContents(ProjectCreateOptions options, string destiPath) {
+        var metadataFile = Path.Combine(destiPath, Statics.MetadataFileName);
+        string contents = File.ReadAllText(metadataFile);
+        contents = contents.Replace("%project_name%", options.Name);
+        contents = contents.Replace("%organization_name%", options.OrgName);
+        File.WriteAllText(metadataFile, contents);
+    }
+
+    public struct ProjectCreateOptions {
+        public string Name;
+        public bool OpenAfterCreation;
+        public string OrgName;
     }
 
     public void DeleteProject() {
@@ -61,7 +98,7 @@ public class ProjectsManager {
 
     private (ProjectData data, bool success) GetProjectDataAtPath(string path) {
         foreach (var file in Directory.GetFiles(path)) {
-            if (Utils.IsMetaDataFile(file)) {
+            if (MetadataMgmt.IsMetaDataFile(file)) {
                 var meta = MetadataMgmt.GetProjectMetaDataAtPath(file);
                 if (meta == null) {
                     Debug.WriteLine("Project is null, scipping.");
@@ -127,14 +164,37 @@ public class ProjectsManager {
         StartEngine();
     }
 
+    public Process EngineProcess;
     public void StartEngine() {
+        if (EngineProcess.IsRunning()) {
+            MessageBox.Show("Tired to start already running engine?!");
+            return;
+        }
+
         ProcessStartInfo info = new ProcessStartInfo() {
             WorkingDirectory = EnginePath,
             FileName = _settingsManager.ExecutablePath,
         };
-        Process.Start(info);
+        EngineProcess = new Process();
+        EngineProcess.StartInfo = info;
+        EngineProcess.EnableRaisingEvents = true;
+
+        EngineProcess.Exited += OnEngineExit;
+        EngineProcess.Disposed += OnEngineExit;
+
+        EngineProcess.Start();
+
+        if (!EngineProcess.IsRunning()) {
+            MessageBox.Show("Could not start Engine!");
+            CloseProject();
+            return;
+        }
     }
 
+    private void OnEngineExit(object? sender, EventArgs e) {
+        Debug.WriteLine("Engine closed, closing projects!");
+        CloseProject();
+    }
 
     private bool StartCopy(string projPath) {
         var dirs = Directory.GetDirectories(projPath);

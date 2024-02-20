@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using IoLiteLauncher.Backend;
+using IoLiteLauncher.Utils;
 
 namespace IoliteLauncher.Backend.Core;
 
@@ -19,4 +21,9 @@ public class MetadataMgmt {
     public static Project? GetProjectMetaDataAtPath(string metadataFilePath) {
         return Serializer.FromFile<MetadataMgmt.Project>(metadataFilePath);
     }
+
+    public static bool IsMetaDataFile(string file) {
+        return Path.GetFileName(file).ToLower().Equals(Statics.MetadataFileName);
+    }
+
 }

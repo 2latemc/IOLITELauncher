@@ -32,6 +32,7 @@ public class Instance {
     }
 
     public void Shutdown() {
+        _instance.ProjectsManager.CloseProject();
         SettingsManager.Save();
     }
 }

@@ -1,10 +1,12 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows;
 using IoLiteLauncher.Backend;
 using IoliteLauncher.Backend.Core;
 using Microsoft.VisualBasic.CompilerServices;
 using System.Windows.Controls;
 using System.Diagnostics;
+using System.Runtime.InteropServices.JavaScript;
 using IoLiteLauncher.Utils;
 
 namespace IoliteLauncher.Views  {
@@ -16,14 +18,18 @@ namespace IoliteLauncher.Views  {
             DataContext = this;
             _instance = Instance.Get;
 
+            RefreshProjects();
+
+            InitializeComponent();
+
+        }
+
+        private void RefreshProjects() {
             var fetchProjects = _instance.ProjectsManager.FetchProjects();
             Projects = new ObservableCollection<ProjectsManager.ProjectData>();
             foreach (ProjectsManager.ProjectData project in fetchProjects) {
                 Projects.Add(project);
             }
-
-            InitializeComponent();
-
         }
 
         private void OpenSettings(object sender, RoutedEventArgs e) {
@@ -49,7 +55,19 @@ namespace IoliteLauncher.Views  {
         }
 
         private void CreateProject(object sender, RoutedEventArgs e) {
-            _instance.ProjectsManager.StartEngine();
+            var newName = ProjectCreationName.Text;
+            if (String.IsNullOrWhiteSpace(newName) || String.IsNullOrEmpty(newName)) {
+                MessageBox.Show("Enter project name");
+                return;
+            }
+            newName = newName.Replace(" ", "");
+
+            _instance.ProjectsManager.CreateProject(new ProjectsManager.ProjectCreateOptions() {
+                Name = newName,
+                OpenAfterCreation = true,
+                OrgName = "Example Org",
+            });
+            RefreshProjects();
         }
 
         private void SubmitBug(object sender, RoutedEventArgs e) {

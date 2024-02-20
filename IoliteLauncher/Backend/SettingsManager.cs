@@ -15,8 +15,7 @@ public class SettingsManager {
 
     public string ExecutablePath => Path.Combine(SettingsData.EnginePath, Statics.ExecutableName);
 
-    private string _settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        "IOLauncher", "settings.json");
+    private string _settingsPath = Path.Combine(Statics.AppDataPath, "settings.json");
 
     public SettingsManager() {
         _instance = Instance.Get;

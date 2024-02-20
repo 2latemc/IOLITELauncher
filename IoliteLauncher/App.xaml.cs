@@ -2,10 +2,15 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
 using IoLiteLauncher.Backend;
+using IoLiteLauncher.Utils;
+using Application = System.Windows.Application;
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace IoLiteLauncher {
     /// <summary>
@@ -21,6 +26,13 @@ namespace IoLiteLauncher {
         }
 
         private void App_OnExit(object sender, ExitEventArgs e) {
+            if (_instance.ProjectsManager.EngineProcess.IsRunning()) {
+                MessageBox.Show("Looks like Engine is still running, closing now!", "", MessageBoxButtons.OK);
+                var process = _instance.ProjectsManager.EngineProcess;
+                process.Kill();
+                process.WaitForExit();
+                process.Dispose();
+            }
             _instance.Shutdown();
         }
     }

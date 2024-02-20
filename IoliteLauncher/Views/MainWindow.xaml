@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
         <StackPanel>
             <StackPanel Orientation="Horizontal">
-                <TextBox>ProjectName</TextBox>
+                <TextBox x:Name="ProjectCreationName">MyProject</TextBox>
                 <Button Click="CreateProject">Create Project</Button>
             </StackPanel>
             <Button Click="OpenSettings">Open settings</Button>
