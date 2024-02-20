@@ -23,14 +23,15 @@ public class LockManager {
         }
     }
 
-    public void ForceRemoveLockFile() {
+    public bool ForceRemoveLockFile() {
         try {
             if (File.Exists(LockPath))
                 File.Delete(LockPath);
+            return true;
         }
         catch(Exception e) {
             MessageBox.Show("Could not delete lock file with e " + e.Message);
-            return;
+            return false;
         }
     }
 

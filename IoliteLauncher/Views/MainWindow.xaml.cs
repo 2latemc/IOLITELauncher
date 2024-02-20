@@ -46,5 +46,9 @@ namespace IoliteLauncher.Views  {
             Process.Start("explorer.exe", item.Path);
 
         }
+
+        private void CreateProject(object sender, RoutedEventArgs e) {
+            _instance.ProjectsManager.StartEngine();
+        }
     }
 }

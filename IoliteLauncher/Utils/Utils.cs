@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using IoliteLauncher.Backend.Core;
 
 namespace IoLiteLauncher.Utils;
 
@@ -32,16 +36,33 @@ public class Utils {
         return false;
     }
 
-    public static void MoveDirectory(string source, string destination) {
-        foreach (var file in Directory.EnumerateFiles(source))
-        {
-            var dest = Path.Combine(destination, Path.GetDirectoryName(source), Path.GetFileName(file));
-            File.Move(file, dest);
-        }
+    public static async Task WaitTask(int delayInSeconds) {
+        await Task.Delay(delayInSeconds * 1000);
+        return;
+    }
 
-        foreach (string directory in Directory.GetDirectories(destination)) {
-            var dest = Path.Combine(destination, Path.GetDirectoryName(source) ,Path.GetDirectoryName(directory));
-            Directory.Move(directory, dest);
+    public static (bool success, ProjectsManager.ProjectDataStorage? projectDataStorage) MoveDirectoryContents(string source, string destination) {
+        var dirs = Directory.GetDirectories(source);
+        var files = Directory.GetFiles(source);
+
+        ProjectsManager.ProjectDataStorage storage = new ProjectsManager.ProjectDataStorage(new List<string>(), new List<string>(), source);
+        try {
+            foreach (string file in files) {
+                File.Move(file, Path.Combine(destination, Path.GetFileName(file)));
+                storage.AffectedFiles.Add(Path.GetFileName(file));
+            }
+
+            foreach (string dir in dirs) {
+                var destiPath = Path.Combine(destination, Path.GetFileName(dir));
+                Directory.Move(dir, destiPath);
+                storage.AffectedDirs.Add(Path.GetFileName(dir));
+            }
+
+            return (true, storage);
+        }
+        catch (Exception e) {
+            Debug.WriteLine(e);
+            return (false, null);
         }
     }
 }

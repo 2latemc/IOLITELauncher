@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows;
 using System.Windows.Documents;
 using IoLiteLauncher.Backend;
 using IoLiteLauncher.Utils;
+using IoliteLauncher.Views;
 
 namespace IoliteLauncher.Backend.Core;
 
@@ -16,6 +18,9 @@ public class ProjectsManager {
 
 
     private string EnginePath => _settingsManager.SettingsData.EnginePath;
+
+    public string ProjectDataStoragePath =>
+        Path.Combine(_settingsManager.SettingsData.EnginePath, Statics.ProjectDataStructureName);
 
     public ProjectsManager() {
         _instance = Instance.Get;
@@ -93,8 +98,8 @@ public class ProjectsManager {
             return;
         }
 
-        bool success = _lockManager.CreateLock(new LockFile(projPath));
-        if (!success) {
+        bool successLock = _lockManager.CreateLock(new LockFile(projPath));
+        if (!successLock) {
             MessageBox.Show("Could not create lock file");
             return;
         }
@@ -107,23 +112,60 @@ public class ProjectsManager {
             return;
         }
 
-        StartCopy(projPath);
+        bool success = StartCopy(projPath);
+        if (!success) {
+            Debug.WriteLine("Engine copy failed, aborting..");
+            return;
+        }
+
+        // LoadingWindow loadingWindow = new LoadingWindow();
+        // loadingWindow.ShowLoadingWindow(StartEngine, 5);
 
         Debug.WriteLine("Starting Engine..");
-        Process.Start(_settingsManager.ExecutablePath);
+        // StartEngine();
+    }
+
+    public void StartEngine() {
+        Process process = new Process {
+            StartInfo = {
+                FileName = _settingsManager.ExecutablePath,
+                Arguments = "",
+                UseShellExecute = false,
+            }
+        };
+
+        process.Start();
+        process.WaitForExit();
     }
 
 
-    private void StartCopy(string projPath) {
+    private bool StartCopy(string projPath) {
         var dirs = Directory.GetDirectories(projPath);
         var files = Directory.GetFiles(projPath);
-        foreach (string dir in dirs) {
-            Utils.MoveDirectory(dir, EnginePath);
+        // foreach (string dir in dirs) {
+        //     // Utils.MoveDirectory(dir, EnginePath);
+        //     var destiPath = Path.Combine(EnginePath, Path.GetFileName(dir));
+        //     Directory.Move(dir, destiPath);
+        // }
+        //
+        // foreach (string file in files) {
+        //     File.Move(file, Path.Combine(EnginePath, Path.GetFileName(file)));
+        // }
+
+        var moveDirectoryContents = Utils.MoveDirectoryContents(projPath, EnginePath);
+
+        if (!moveDirectoryContents.success) {
+            MessageBox.Show("Could not start copying directory contents.");
+            return false;
         }
 
-        foreach (string file in files) {
-            File.Move(file, Path.Combine(EnginePath, Path.GetFileName(file)));
+        bool writeResult = Serializer.ToFile(ProjectDataStoragePath, moveDirectoryContents.projectDataStorage);
+        if (!writeResult) {
+            MessageBox.Show("Could not write project data storage path.");
+            return false;
         }
+
+        return true;
     }
 
 
@@ -139,7 +181,34 @@ public class ProjectsManager {
         }
     }
 
-    private void CloseProject() {
+    private bool CloseProject() {
+        ProjectDataStorage? storage = Serializer.FromFile<ProjectDataStorage>(ProjectDataStoragePath);
+        if (storage == null) {
+            MessageBox.Show("Storage null aborting closing project.");
+            return false;
+        }
+
+
+        try {
+            foreach (string dir in storage.Value.AffectedDirs) {
+                var srcPath = Path.Combine(EnginePath, dir);
+                var destPath = Path.Combine(storage.Value.ProjectPath, dir);
+                Directory.Move(srcPath, destPath);
+            }
+
+            foreach (string file in storage.Value.AffectedFiles) {
+                var srcPath = Path.Combine(EnginePath, file);
+                var destPath = Path.Combine(storage.Value.ProjectPath, file);
+                File.Move(srcPath, destPath);
+            }
+
+            File.Delete(ProjectDataStoragePath);
+            return _lockManager.ForceRemoveLockFile();
+        }
+        catch (Exception e) {
+            MessageBox.Show("Could not close project with e " + e.Message);
+            return false;
+        }
     }
 
 
@@ -171,7 +240,7 @@ public class ProjectsManager {
                     if (!Directory.Exists(destiPath)) Directory.CreateDirectory(destiPath);
                     if (allowed) {
                         foreach (var file in Directory.GetFiles(_settingsManager.SettingsData.EnginePath)) {
-                            if (Utils.IsMetaDataFile(file)) {
+                            if (Statics.AffectedFileNames.Contains(Path.GetFileName(file))) {
                                 File.Move(file, Path.Combine(destiPath, Path.GetFileName(file)));
                             }
                         }

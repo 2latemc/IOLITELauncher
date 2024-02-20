@@ -18,7 +18,7 @@
         <StackPanel>
             <StackPanel Orientation="Horizontal">
                 <TextBox>ProjectName</TextBox>
-                <Button>Create Project</Button>
+                <Button Click="CreateProject">Create Project</Button>
             </StackPanel>
             <Button Click="OpenSettings">Open settings</Button>
         </StackPanel>
