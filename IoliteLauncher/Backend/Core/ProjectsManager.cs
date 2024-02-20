@@ -78,6 +78,7 @@ public class ProjectsManager {
         return (default, false);
     }
 
+    public string EngineStartCmd => "cd "+ EnginePath +"\n" + _settingsManager.ExecutablePath +"\n";
 
     public struct ProjectData {
         public string Path { get; set; }
@@ -122,20 +123,15 @@ public class ProjectsManager {
         // loadingWindow.ShowLoadingWindow(StartEngine, 5);
 
         Debug.WriteLine("Starting Engine..");
-        // StartEngine();
+        StartEngine();
     }
 
     public void StartEngine() {
-        Process process = new Process {
-            StartInfo = {
-                FileName = _settingsManager.ExecutablePath,
-                Arguments = "",
-                UseShellExecute = false,
-            }
+        ProcessStartInfo info = new ProcessStartInfo() {
+            WorkingDirectory = EnginePath,
+            FileName = _settingsManager.ExecutablePath,
         };
-
-        process.Start();
-        process.WaitForExit();
+        Process.Start(info);
     }
 
 
