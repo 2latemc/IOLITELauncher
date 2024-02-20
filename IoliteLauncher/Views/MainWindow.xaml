@@ -21,6 +21,7 @@
                 <Button Click="CreateProject">Create Project</Button>
             </StackPanel>
             <Button Click="OpenSettings">Open settings</Button>
+            <Button Click="SubmitBug">Submit a bug</Button>
         </StackPanel>
 
         <DockPanel Grid.Row="1">

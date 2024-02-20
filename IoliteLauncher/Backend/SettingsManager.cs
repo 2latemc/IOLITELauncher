@@ -51,7 +51,25 @@ public class SettingsManager {
     }
 
     public void StartMain() {
-        _instance.ProjectsManager.MoveTemplateProjects();
+        if (!File.Exists(_instance.ProjectsManager.ProjectDataStoragePath)) {
+            _instance.ProjectsManager.MoveTemplateProjects();
+        }
+        else {
+            var msgBoxResult = MessageBox.Show("Looks like there is a project currently open, would you like to close it now?", "",
+                MessageBoxButton.YesNo);
+            if (msgBoxResult == MessageBoxResult.Yes) {
+                bool closed = _instance.ProjectsManager.CloseProject();
+                if (!closed) {
+                    MessageBox.Show("Could not close, aborting!");
+                    Application.Current.Shutdown();
+                    return;
+                }
+            }
+            else {
+                Application.Current.Shutdown();
+                return;
+            }
+        }
 
         MainWindow mainWindow = new MainWindow();
         foreach (string path in SettingsData.ProjectsPaths) {

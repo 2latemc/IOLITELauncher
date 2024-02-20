@@ -5,6 +5,7 @@ using IoliteLauncher.Backend.Core;
 using Microsoft.VisualBasic.CompilerServices;
 using System.Windows.Controls;
 using System.Diagnostics;
+using IoLiteLauncher.Utils;
 
 namespace IoliteLauncher.Views  {
     public partial class MainWindow : Window {
@@ -49,6 +50,10 @@ namespace IoliteLauncher.Views  {
 
         private void CreateProject(object sender, RoutedEventArgs e) {
             _instance.ProjectsManager.StartEngine();
+        }
+
+        private void SubmitBug(object sender, RoutedEventArgs e) {
+            Downloader.OpenUrl(Statics.GithubIssuesURL);
         }
     }
 }

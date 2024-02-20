@@ -93,7 +93,8 @@ public class ProjectsManager {
                 MessageBox.Show("Looks like another Project is currently open. Do you want to try force closing it?",
                     "", MessageBoxButton.YesNo);
             if (result == MessageBoxResult.Yes) {
-                CloseProject();
+                bool successfullyClosed = CloseProject();
+                if (successfullyClosed) OpenProject(projPath);
             }
 
             return;
@@ -177,7 +178,13 @@ public class ProjectsManager {
         }
     }
 
-    private bool CloseProject() {
+    public bool CloseProject() {
+        if (!File.Exists(ProjectDataStoragePath)) {
+            Debug.WriteLine("Project data storage not found, aborting & deleting .lock");
+            _lockManager.ForceRemoveLockFile();
+            return false;
+        }
+
         ProjectDataStorage? storage = Serializer.FromFile<ProjectDataStorage>(ProjectDataStoragePath);
         if (storage == null) {
             MessageBox.Show("Storage null aborting closing project.");
