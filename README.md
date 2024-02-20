@@ -3,7 +3,7 @@
 
 ## Installation:
 - Make sure you have a **fresh** install of the engine. Otherwise things will break.
-- Make sure you are running on the release [V.0.4.8]("https://media.missing-deadlines.com/iolite/builds/release/iolite-v0.4.8.exe") of the Engine as things might not work with later engine versions (Currently (20.02.2024) this is the latest release)
+- Make sure you are running on the release [V.0.4.8](https://media.missing-deadlines.com/iolite/builds/release/iolite-v0.4.8.exe) of the Engine as things might not work with later engine versions (Currently (20.02.2024) this is the latest release)
 
 ## How it works:
 The launcher copies the per project information to a by the user specified directory.
