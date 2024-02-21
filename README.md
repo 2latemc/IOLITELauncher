@@ -37,5 +37,6 @@ Make sure to also uninstall the engine & projects if you no longer need them.
 - Project Renaming
 - ~~Fix horrible UI~~
 - Per project plugin support
+- Project building
 
 Launcher settings saved at %appdata%\IoliteLauncher
