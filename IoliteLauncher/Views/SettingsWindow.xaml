@@ -15,25 +15,25 @@
         </Grid.RowDefinitions>
         <StackPanel>
             <StackPanel Orientation="Horizontal">
-                <Label DockPanel.Dock="Left" Width="Auto">Engine Path</Label>
+                <Label FontWeight="DemiBold" DockPanel.Dock="Left" Width="Auto">Engine Path</Label>
                 <TextBox x:Name="EngineBox" MinWidth="300" HorizontalAlignment="Stretch">C:/User/IOLITE</TextBox>
-                <Button DockPanel.Dock="Right" Width="50" Click="BrowseEnginePath">Browse</Button>
-                <Button DockPanel.Dock="Right" Width="100" Click="Download">Download Engine</Button>
-                <Button DockPanel.Dock="Right" Width="100" Click="BrowseToEnginePath">Browse to Path</Button>
+                <Button Margin="15 0 2 0" Height="25" FontWeight="Normal" FontSize="12" Width="85" DockPanel.Dock="Right" Click="BrowseEnginePath">Browse</Button>
+                <Button Margin="2 0 2 0 " Height="25" FontWeight="Normal" FontSize="12" Width="85" DockPanel.Dock="Right" Click="Download">Download Engine</Button>
+                <Button Margin="2  0 20 0" Height="25" FontWeight="Normal" FontSize="12" Width="85" DockPanel.Dock="Right" Click="BrowseToEnginePath">Browse to Path</Button>
             </StackPanel>
             <Label Foreground="Red">It is heavily recommended to use a fresh install of the engine or things will break!</Label>
         </StackPanel>
         <StackPanel Grid.Row="2">
             <StackPanel Orientation="Horizontal">
-                <Button Click="RemoveElementButton">Remove Element</Button>
-                <Button Click="AddProjectPathElementButton">Add Element</Button>
-                <TextBox x:Name="ProjectPathBox">Path to add</TextBox>
-                <Button Click="BrowseProjectPath">Browse</Button>
+                <Button Click="RemoveElementButton" Margin="2  0 20 0" Height="25" FontWeight="Normal" FontSize="12" Width="120">Remove Element</Button>
+                <TextBox Margin="0 0 8 0" x:Name="ProjectPathBox" Height="25" FontWeight="Normal" FontSize="12" MinWidth="130" VerticalAlignment="Center">Path to add</TextBox>
+                <Button Click="BrowseProjectPath" Height="25" FontWeight="Normal" FontSize="12" Width="100">Browse</Button>
+                <Button Click="AddProjectPathElementButton" Height="25" FontWeight="Normal" FontSize="12" Width="100">Add Element</Button>
             </StackPanel>
             <ListView MinHeight="30px" Background="Gray" x:Name="ProjectPathList"
                       ItemsSource="{Binding ProjectPathEntries}">
             </ListView>
         </StackPanel>
-        <Button Click="Submit" Grid.Row="3">Apply</Button>
+        <Button Click="Submit" Grid.Row="3" HorizontalAlignment="Center" MinWidth="120">Apply</Button>
     </Grid>
 </Window>
