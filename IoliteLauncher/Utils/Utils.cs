@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using IoliteLauncher.Backend.Core;
 
 namespace IoLiteLauncher.Utils;
 
-public class Utils {
-    public static bool DoesDirContainFile(string path, string fileName) {
+public abstract class Utils {
+    private static bool DoesDirContainFile(string path, string fileName) {
         try {
             foreach (var file in Directory.GetFiles(path)) {
                 if (Path.GetFileName(file) == fileName) return true;
@@ -34,7 +33,6 @@ public class Utils {
 
     public static async Task WaitTask(int delayInSeconds) {
         await Task.Delay(delayInSeconds * 1000);
-        return;
     }
 
     public static (bool success, ProjectsManager.ProjectDataStorage? projectDataStorage) MoveDirectoryContents(
@@ -56,11 +54,11 @@ public class Utils {
             }
 
             foreach (string dir in dirs) {
-                var destiPath = Path.Combine(destination, Path.GetFileName(dir));
+                var destPath = Path.Combine(destination, Path.GetFileName(dir));
                 if (!copy)
-                    Directory.Move(dir, destiPath);
+                    Directory.Move(dir, destPath);
                 else {
-                    CopyDirectory(dir, destiPath, true);
+                    CopyDirectory(dir, destPath, true);
                 }
                 storage.AffectedDirs.Add(Path.GetFileName(dir));
             }
@@ -110,7 +108,7 @@ public class Utils {
 
 public static class ProcessExtensions
 {
-    public static bool IsRunning(this Process process) {
+    public static bool IsRunning(this Process? process) {
         if (process == null) return false;
 
         try

@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Windows;
-using Accessibility;
-using IoliteLauncher.Backend.Core;
-using IoLiteLauncher.Utils;
 using Newtonsoft.Json;
 
 namespace IoLiteLauncher.Backend;
@@ -18,7 +14,7 @@ public class LockManager {
 
     private string LockPath {
         get {
-            if (_instance == null) _instance = Instance.Get;
+            _instance ??= Instance.Get;
             return Path.Combine(_instance.SettingsManager.SettingsData.EnginePath, ".lock");
         }
     }
@@ -36,7 +32,7 @@ public class LockManager {
     }
 
     public bool ContainsLock() {
-        if (_instance == null) _instance = Instance.Get;
+        _instance ??= Instance.Get;
 
         return !String.IsNullOrEmpty(GetLockProject());
     }
@@ -58,7 +54,7 @@ public class LockManager {
         }
     }
 
-    public string? GetLockProject() {
+    private string? GetLockProject() {
         if (!File.Exists(LockPath)) {
             return null;
         }

@@ -3,15 +3,13 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using IoLiteLauncher.Backend;
 using IoliteLauncher.Backend.Core;
-using Microsoft.VisualBasic.CompilerServices;
 using System.Windows.Controls;
 using System.Diagnostics;
-using System.Runtime.InteropServices.JavaScript;
 using IoLiteLauncher.Utils;
 
 namespace IoliteLauncher.Views  {
     public partial class MainWindow : Window {
-        private Instance _instance;
+        private readonly Instance _instance;
 
         public ObservableCollection<ProjectsManager.ProjectData> Projects { get; set; }
         public MainWindow() {
@@ -41,7 +39,7 @@ namespace IoliteLauncher.Views  {
         private void OpenProject(object sender, RoutedEventArgs e) {
             ProjectsManager.ProjectData? selected = (ProjectsManager.ProjectData?)ProjectsList.SelectedItem;
             if (selected == null) {
-                MessageBox.Show("Select a project from the list first.");
+                MessageBox.Show("Select a project from the list fist");
                 return;
             }
             _instance.ProjectsManager.OpenProject(selected.GetValueOrDefault().Path);
@@ -71,7 +69,7 @@ namespace IoliteLauncher.Views  {
         }
 
         private void SubmitBug(object sender, RoutedEventArgs e) {
-            Downloader.OpenUrl(Statics.GithubIssuesURL);
+            Downloader.OpenUrl(Statics.GithubIssuesUrl);
         }
     }
 }
