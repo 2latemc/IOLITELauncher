@@ -22,6 +22,14 @@ The launcher copies the per project information to a by the user specified direc
 3. Move the app_metadata.json file into the newly created folder
 4. If your launcher has the correct projects path selected in the settings your project should show up in the list
 
+## Uninstalling
+Run the UninstallIoliteLauncher.exe file located in the Applications directory.
+Make sure to also uninstall the engine & projects if you no longer need them.
+
+## Self compiling
+1. Publish the solution using your fav. Code Editor (Such as JetbrainsRider / Visual Studio)
+2. Make sure you copy over the DefaultProject Directory located in Setup/DefaultProject into %appdata%\IoliteLauncher (Path should look something like this: C:\Users\2late\AppData\Roaming\IoliteLauncher\DefaultProject)
+
 ## Todos:
 - ~~Project Creation~~
 - ~~Project Opening~~
@@ -30,4 +38,4 @@ The launcher copies the per project information to a by the user specified direc
 - Fix horrible UI
 - Per project plugin support
 
-Launcher settings saved at %appdata%/iolauncher
+Launcher settings saved at %appdata%\IoliteLauncher
