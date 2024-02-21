@@ -32,6 +32,11 @@ public class SettingsManager {
     }
 
     public void Load() {
+        if (!File.Exists(_settingsPath)) {
+            SettingsWindow settingsWindow = new SettingsWindow();
+            settingsWindow.ShowDialog();
+            return;
+        }
         var data = Serializer.FromFile<SettingsData>(_settingsPath);
         if (data == null) {
             SettingsData = new SettingsData();

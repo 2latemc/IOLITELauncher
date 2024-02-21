@@ -38,6 +38,10 @@ public class ProjectsManager {
             return false;
         }
 
+        if (!Directory.Exists(ProjectDefaultTemplatePath)) {
+            MessageBox.Show("Default projects not found please reinstall using the installer.");
+            return false;
+        }
         try {
             Directory.CreateDirectory(destiPath);
 

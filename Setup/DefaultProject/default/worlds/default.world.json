@@ -1,0 +1,263 @@
+[
+  {
+    "uuid": {
+      "value": 2945845921476285104
+    },
+    "name": {
+      "value": "default"
+    },
+    "offsetToParent": 0,
+    "propertyEntries": [
+      {
+        "type": "Node",
+        "properties": {
+          "uuid": {
+            "value": 2945845921476285104
+          },
+          "localPos": {
+            "values": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "localOrient": {
+            "values": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          "localSize": {
+            "values": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "uuid": {
+      "value": 14296273557556658069
+    },
+    "name": {
+      "value": "game_camera"
+    },
+    "offsetToParent": -1,
+    "propertyEntries": [
+      {
+        "type": "Node",
+        "properties": {
+          "uuid": {
+            "value": 14296273557556658069
+          },
+          "localPos": {
+            "values": [
+              -10.0,
+              10.0,
+              -10.0
+            ]
+          },
+          "localOrient": {
+            "values": [
+              0.2778158485889435,
+              0.36497172713279724,
+              -0.11507512629032135,
+              0.8811196088790894
+            ]
+          },
+          "localSize": {
+            "values": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          }
+        }
+      },
+      {
+        "type": "Camera",
+        "properties": {
+          "uuid": {
+            "value": 445353067930007449
+          },
+          "projectionType": {
+            "value": 0
+          },
+          "fov": {
+            "value": 60.000003814697266
+          }
+        }
+      },
+      {
+        "type": "CameraController",
+        "properties": {
+          "uuid": {
+            "value": 445353067930007449
+          },
+          "cameraControllerType": {
+            "value": 1
+          },
+          "flags": {
+            "value": 1
+          },
+          "offsetY": {
+            "value": 2.0
+          }
+        }
+      }
+    ]
+  },
+  {
+    "uuid": {
+      "value": 13504551648646907946
+    },
+    "name": {
+      "value": "editing_camera"
+    },
+    "offsetToParent": -2,
+    "propertyEntries": [
+      {
+        "type": "Node",
+        "properties": {
+          "uuid": {
+            "value": 13504551648646907946
+          },
+          "localPos": {
+            "values": [
+              -10.0,
+              10.0,
+              -10.0
+            ]
+          },
+          "localOrient": {
+            "values": [
+              0.27781590819358826,
+              0.36497169733047485,
+              -0.11507513374090195,
+              0.8811195492744446
+            ]
+          },
+          "localSize": {
+            "values": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          }
+        }
+      },
+      {
+        "type": "Camera",
+        "properties": {
+          "uuid": {
+            "value": 7557246170764985270
+          },
+          "projectionType": {
+            "value": 0
+          },
+          "fov": {
+            "value": 60.000003814697266
+          }
+        }
+      }
+    ]
+  },
+  {
+    "uuid": {
+      "value": 1915430029158298433
+    },
+    "name": {
+      "value": "cube"
+    },
+    "offsetToParent": -3,
+    "propertyEntries": [
+      {
+        "type": "Node",
+        "properties": {
+          "uuid": {
+            "value": 1915430029158298433
+          },
+          "localPos": {
+            "values": [
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "localOrient": {
+            "values": [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          },
+          "localSize": {
+            "values": [
+              0.09999999403953552,
+              0.09999999403953552,
+              0.10000000149011612
+            ]
+          }
+        }
+      },
+      {
+        "type": "VoxelShape",
+        "properties": {
+          "uuid": {
+            "value": 445353067930007449
+          },
+          "voxelShapeName": {
+            "value": "cube_1m"
+          },
+          "paletteName": {
+            "value": ""
+          },
+          "customSize": {
+            "values": [
+              0,
+              0,
+              0
+            ]
+          },
+          "voxelShapeFlags": {
+            "value": 0
+          },
+          "rigidBodyFlags": {
+            "value": 0
+          },
+          "pivot": {
+            "values": [
+              5.0,
+              5.0,
+              5.0
+            ]
+          },
+          "linearDamping": {
+            "value": 0.10000000149011612
+          },
+          "angularDamping": {
+            "value": 0.10000000149011612
+          },
+          "density": {
+            "value": 1.0
+          },
+          "fractureType": {
+            "value": 0
+          },
+          "maxNumConvexSubdivisions": {
+            "value": 0
+          },
+          "snapshotUuid": {
+            "value": 18446744073709551615
+          }
+        }
+      }
+    ]
+  }
+]

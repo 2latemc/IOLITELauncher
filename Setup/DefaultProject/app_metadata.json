@@ -1,0 +1,10 @@
+{
+  "application_name": "IOLITE/%project_name%",
+  "organization_name": "%organization_name%",
+  "data_sources": [
+	"default"
+  ],
+  "initial_world": "default",
+  "initial_game_state": "Editing",
+  "version_string": "development"
+}

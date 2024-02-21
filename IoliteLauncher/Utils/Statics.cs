@@ -13,7 +13,7 @@ public class Statics {
     public static readonly string GithubIssuesURL = "https://github.com/2latemc/ioliteLauncher/issues";
     public static readonly string DefaultProjectTemplateFolderName = "DefaultProject";
 
-    public static string AppDataPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "IOLauncher");
+    public static string AppDataPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "IoliteLauncher");
 
     public static List<string> TemplatePaths = new List<string>() {
         "default",
