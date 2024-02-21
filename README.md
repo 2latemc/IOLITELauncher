@@ -1,5 +1,5 @@
 # ioliteLauncher
-# Unofficial Launcher for the [iolite](https://iolite-engine.com/) Game Engine
+# Unofficial Launcher for the [IOLITE - Voxel Game Engine](https://iolite-engine.com/)
 
 *This launcher is in early alpha. Make sure to backup all your projects before working with this.*
 
