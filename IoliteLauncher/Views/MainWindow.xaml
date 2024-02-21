@@ -19,16 +19,18 @@
                 <Button Click="CreateProject">Create Project</Button>
             </StackPanel>
             <Button Click="OpenSettings">Open settings</Button>
-            <Button Click="SubmitBug">Submit a bug</Button>
+            <Button Click="SubmitBug">Submit an issue</Button>
+            <Button Click="RefreshBtn">Refresh</Button>
         </StackPanel>
 
         <DockPanel Grid.Row="1">
-            <Button Height="Auto" MinHeight="20px" DockPanel.Dock="Top" Click="OpenProject">Open Project</Button>
             <ListView DockPanel.Dock="Bottom" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" x:Name="ProjectsList" ItemsSource="{Binding Projects}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <DockPanel HorizontalAlignment="Stretch">
+                            <Button DockPanel.Dock="Right" Click="DeleteProject">Delete</Button>
                             <Button DockPanel.Dock="Right" Click="BrowseProjectPathClicked">Browse</Button>
+                            <Button DockPanel.Dock="Right" Click="OpenProject">Open</Button>
                             <StackPanel Orientation="Vertical">
                                 <TextBlock FontSize="13px" Text="{Binding ProjectName}" />
                                 <TextBlock FontSize="10px" Text="{Binding Path}" />

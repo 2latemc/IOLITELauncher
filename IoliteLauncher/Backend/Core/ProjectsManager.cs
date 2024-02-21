@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows;
 using IoLiteLauncher.Backend;
 using IoLiteLauncher.Utils;
+using Microsoft.VisualBasic.FileIO;
 
 namespace IoliteLauncher.Backend.Core;
 
@@ -24,7 +25,8 @@ public class ProjectsManager {
     }
 
 
-    private string ProjectDefaultTemplatePath => Path.Combine(Statics.AppDataPath, Statics.DefaultProjectTemplateFolderName);
+    private string ProjectDefaultTemplatePath =>
+        Path.Combine(Statics.AppDataPath, Statics.DefaultProjectTemplateFolderName);
 
     public bool CreateProject(ProjectCreateOptions options) {
         var destPath = Path.Combine(_settingsManager.SettingsData.ProjectsPaths[0], options.Name);
@@ -37,6 +39,7 @@ public class ProjectsManager {
             MessageBox.Show("Default projects not found please reinstall using the installer.");
             return false;
         }
+
         try {
             Directory.CreateDirectory(destPath);
 
@@ -67,7 +70,23 @@ public class ProjectsManager {
         public string OrgName;
     }
 
-    public void DeleteProject() {
+    public void DeleteProject(ProjectData projectData) {
+        var result = MessageBox.Show("Do you really want to delete " + projectData.ProjectName + "?", "Project Deletion",
+            MessageBoxButton.YesNo);
+        if (result != MessageBoxResult.Yes) return;
+
+        bool closed = CloseProject();
+        // if (!closed) {
+        //     MessageBox.Show("Could not delete: Couldn't close project.");
+        //     return;
+        // }
+
+        try {
+            FileSystem.DeleteDirectory(projectData.Path, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+            MessageBox.Show("Project  was moved to the Recycling bin!");
+        }catch(Exception e) {
+            MessageBox.Show("Could not delete Project. E: " + e.Message);
+        }
     }
 
     public void RenameProject(string projectPath, string newName) {
@@ -159,6 +178,7 @@ public class ProjectsManager {
     }
 
     public Process? EngineProcess;
+
     public void StartEngine() {
         if (EngineProcess != null && EngineProcess.IsRunning()) {
             MessageBox.Show("Tired to start already running engine?!");
@@ -221,6 +241,12 @@ public class ProjectsManager {
     }
 
     public bool CloseProject() {
+        if (EngineProcess != null && EngineProcess.IsRunning()) {
+            EngineProcess.Kill();
+            EngineProcess.WaitForExit();
+            EngineProcess.Dispose();
+        }
+
         if (!File.Exists(ProjectDataStoragePath)) {
             Debug.WriteLine("Project data storage not found, aborting & deleting .lock");
             _lockManager.ForceRemoveLockFile();
