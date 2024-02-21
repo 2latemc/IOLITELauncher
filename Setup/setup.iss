@@ -38,8 +38,11 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "C:\Files\Projects\IOLITE\ioliteLauncher\Setup\Build\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Files\Projects\IOLITE\ioliteLauncher\Setup\Build\IoliteLauncher.pdb"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Files\Projects\IOLITE\ioliteLauncher\Setup\Build\MaterialDesignThemes.Wpf.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Files\Projects\IOLITE\ioliteLauncher\Setup\Build\MaterialDesignColors.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Files\Projects\IOLITE\ioliteLauncher\Setup\Build\IoliteLauncher.runtimeconfig.json"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Files\Projects\IOLITE\ioliteLauncher\Setup\Build\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Files\Projects\IOLITE\ioliteLauncher\Setup\Build\Microsoft.Xaml.Behaviors.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Files\Projects\IOLITE\ioliteLauncher\Setup\Build\IoliteLauncher.deps.json"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Files\Projects\IOLITE\ioliteLauncher\Setup\Build\IoliteLauncher.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Files\Projects\IOLITE\ioliteLauncher\Setup\DefaultProject\*"; DestDir: "{userappdata}\IoliteLauncher\DefaultProject"; Flags: ignoreversion recursesubdirs createallsubdirs

@@ -33,9 +33,9 @@ Make sure to also uninstall the engine & projects if you no longer need them.
 ## Todos:
 - ~~Project Creation~~
 - ~~Project Opening~~
-- ProjectDeletion
+- ~~ProjectDeletion~~
 - Project Renaming
-- Fix horrible UI
+- ~~Fix horrible UI~~
 - Per project plugin support
 
 Launcher settings saved at %appdata%\IoliteLauncher
