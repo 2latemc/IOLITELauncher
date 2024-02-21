@@ -2,19 +2,15 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Windows;
-using System.Windows.Documents;
 using IoLiteLauncher.Backend;
 using IoLiteLauncher.Utils;
-using IoliteLauncher.Views;
+using Microsoft.VisualBasic.FileIO;
 
 namespace IoliteLauncher.Backend.Core;
 
 public class ProjectsManager {
-    private Instance _instance;
-    private SettingsManager _settingsManager;
+    private readonly SettingsManager _settingsManager;
 
 
     private string EnginePath => _settingsManager.SettingsData.EnginePath;
@@ -23,17 +19,18 @@ public class ProjectsManager {
         Path.Combine(_settingsManager.SettingsData.EnginePath, Statics.ProjectDataStructureName);
 
     public ProjectsManager() {
-        _instance = Instance.Get;
-        _settingsManager = _instance.SettingsManager;
-        _lockManager = _instance.LockManager;
+        var instance = Instance.Get;
+        _settingsManager = instance.SettingsManager;
+        _lockManager = instance.LockManager;
     }
 
 
-    public string ProjectDefaultTemplatePath => Path.Combine(Statics.AppDataPath, Statics.DefaultProjectTemplateFolderName);
+    private string ProjectDefaultTemplatePath =>
+        Path.Combine(Statics.AppDataPath, Statics.DefaultProjectTemplateFolderName);
 
     public bool CreateProject(ProjectCreateOptions options) {
-        var destiPath = Path.Combine(_settingsManager.SettingsData.ProjectsPaths[0], options.Name);
-        if (Directory.Exists(destiPath)) {
+        var destPath = Path.Combine(_settingsManager.SettingsData.ProjectsPaths[0], options.Name);
+        if (Directory.Exists(destPath)) {
             MessageBox.Show("Project path already exists!");
             return false;
         }
@@ -42,14 +39,15 @@ public class ProjectsManager {
             MessageBox.Show("Default projects not found please reinstall using the installer.");
             return false;
         }
+
         try {
-            Directory.CreateDirectory(destiPath);
+            Directory.CreateDirectory(destPath);
 
-            Utils.MoveDirectoryContents(ProjectDefaultTemplatePath, destiPath, true);
+            Utils.MoveDirectoryContents(ProjectDefaultTemplatePath, destPath, true);
 
-            ReplaceMetadataFileContents(options, destiPath);
+            ReplaceMetadataFileContents(options, destPath);
 
-            OpenProject(destiPath);
+            OpenProject(destPath);
             return true;
         }
         catch (Exception e) {
@@ -58,8 +56,8 @@ public class ProjectsManager {
         }
     }
 
-    private static void ReplaceMetadataFileContents(ProjectCreateOptions options, string destiPath) {
-        var metadataFile = Path.Combine(destiPath, Statics.MetadataFileName);
+    private static void ReplaceMetadataFileContents(ProjectCreateOptions options, string destPath) {
+        var metadataFile = Path.Combine(destPath, Statics.MetadataFileName);
         string contents = File.ReadAllText(metadataFile);
         contents = contents.Replace("%project_name%", options.Name);
         contents = contents.Replace("%organization_name%", options.OrgName);
@@ -72,7 +70,23 @@ public class ProjectsManager {
         public string OrgName;
     }
 
-    public void DeleteProject() {
+    public void DeleteProject(ProjectData projectData) {
+        var result = MessageBox.Show("Do you really want to delete " + projectData.ProjectName + "?", "Project Deletion",
+            MessageBoxButton.YesNo);
+        if (result != MessageBoxResult.Yes) return;
+
+        bool closed = CloseProject();
+        // if (!closed) {
+        //     MessageBox.Show("Could not delete: Couldn't close project.");
+        //     return;
+        // }
+
+        try {
+            FileSystem.DeleteDirectory(projectData.Path, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+            MessageBox.Show("Project  was moved to the Recycling bin!");
+        }catch(Exception e) {
+            MessageBox.Show("Could not delete Project. E: " + e.Message);
+        }
     }
 
     public void RenameProject(string projectPath, string newName) {
@@ -105,7 +119,7 @@ public class ProjectsManager {
             if (MetadataMgmt.IsMetaDataFile(file)) {
                 var meta = MetadataMgmt.GetProjectMetaDataAtPath(file);
                 if (meta == null) {
-                    Debug.WriteLine("Project is null, scipping.");
+                    Debug.WriteLine("Project is null, skipping.");
                     continue;
                 }
 
@@ -119,14 +133,12 @@ public class ProjectsManager {
         return (default, false);
     }
 
-    public string EngineStartCmd => "cd "+ EnginePath +"\n" + _settingsManager.ExecutablePath +"\n";
-
     public struct ProjectData {
         public string Path { get; set; }
         public string ProjectName { get; set; }
     }
 
-    private LockManager _lockManager;
+    private readonly LockManager _lockManager;
 
     public void OpenProject(string projPath) {
         if (_lockManager.ContainsLock()) {
@@ -161,16 +173,14 @@ public class ProjectsManager {
             return;
         }
 
-        // LoadingWindow loadingWindow = new LoadingWindow();
-        // loadingWindow.ShowLoadingWindow(StartEngine, 5);
-
         Debug.WriteLine("Starting Engine..");
         StartEngine();
     }
 
-    public Process EngineProcess;
+    public Process? EngineProcess;
+
     public void StartEngine() {
-        if (EngineProcess.IsRunning()) {
+        if (EngineProcess != null && EngineProcess.IsRunning()) {
             MessageBox.Show("Tired to start already running engine?!");
             return;
         }
@@ -201,18 +211,6 @@ public class ProjectsManager {
     }
 
     private bool StartCopy(string projPath) {
-        var dirs = Directory.GetDirectories(projPath);
-        var files = Directory.GetFiles(projPath);
-        // foreach (string dir in dirs) {
-        //     // Utils.MoveDirectory(dir, EnginePath);
-        //     var destiPath = Path.Combine(EnginePath, Path.GetFileName(dir));
-        //     Directory.Move(dir, destiPath);
-        // }
-        //
-        // foreach (string file in files) {
-        //     File.Move(file, Path.Combine(EnginePath, Path.GetFileName(file)));
-        // }
-
         var moveDirectoryContents = Utils.MoveDirectoryContents(projPath, EnginePath);
 
         if (!moveDirectoryContents.success) {
@@ -243,6 +241,12 @@ public class ProjectsManager {
     }
 
     public bool CloseProject() {
+        if (EngineProcess != null && EngineProcess.IsRunning()) {
+            EngineProcess.Kill();
+            EngineProcess.WaitForExit();
+            EngineProcess.Dispose();
+        }
+
         if (!File.Exists(ProjectDataStoragePath)) {
             Debug.WriteLine("Project data storage not found, aborting & deleting .lock");
             _lockManager.ForceRemoveLockFile();
@@ -303,17 +307,17 @@ public class ProjectsManager {
                         allowed = true;
                     }
 
-                    string destiPath = Path.Combine(_settingsManager.SettingsData.ProjectsPaths[0], "TemplateProjects");
-                    if (!Directory.Exists(destiPath)) Directory.CreateDirectory(destiPath);
+                    string destPath = Path.Combine(_settingsManager.SettingsData.ProjectsPaths[0], "TemplateProjects");
+                    if (!Directory.Exists(destPath)) Directory.CreateDirectory(destPath);
                     if (allowed) {
                         foreach (var file in Directory.GetFiles(_settingsManager.SettingsData.EnginePath)) {
                             if (Statics.AffectedFileNames.Contains(Path.GetFileName(file))) {
-                                File.Move(file, Path.Combine(destiPath, Path.GetFileName(file)));
+                                File.Move(file, Path.Combine(destPath, Path.GetFileName(file)));
                             }
                         }
                     }
 
-                    Directory.Move(dir, Path.Combine(destiPath, dirName));
+                    Directory.Move(dir, Path.Combine(destPath, dirName));
                 }
                 catch (Exception e) {
                     MessageBox.Show("Could not project. " + e.Message);

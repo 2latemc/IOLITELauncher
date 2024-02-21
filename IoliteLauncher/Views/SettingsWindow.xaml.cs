@@ -6,21 +6,15 @@ using System.Linq;
 using System.Windows;
 using IoLiteLauncher.Backend;
 using IoLiteLauncher.Utils;
-using Microsoft.Win32;
 using System.Windows.Forms;
-using Application = System.Windows.Application;
 using MessageBox = System.Windows.MessageBox;
 
 namespace IoliteLauncher.Views;
 
 public partial class SettingsWindow : Window {
-    private ObservableCollection<string> _projectPathEntries = null!;
-    public ObservableCollection<string> ProjectPathEntries {
-        get => _projectPathEntries;
-        set => _projectPathEntries = value;
-    }
+    public ObservableCollection<string> ProjectPathEntries { get; set; }
 
-    private Instance _instance;
+    private readonly Instance _instance;
     public SettingsWindow(SettingsData? overrideData = null) {
         DataContext = this;
         _instance = Instance.Get;

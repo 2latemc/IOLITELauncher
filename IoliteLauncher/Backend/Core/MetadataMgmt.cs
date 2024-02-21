@@ -5,7 +5,7 @@ using IoLiteLauncher.Utils;
 
 namespace IoliteLauncher.Backend.Core;
 
-public class MetadataMgmt {
+public abstract class MetadataMgmt {
 
 
     public class Project {

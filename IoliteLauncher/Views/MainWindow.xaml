@@ -3,38 +3,58 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:IoLiteLauncher"
-        xmlns:views="clr-namespace:IoliteLauncher.Views"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Iolite Launcher" Height="450" Width="800"
+        MinWidth="750"
+        MinHeight="450">
     <!-- <Window.DataContext> -->
     <!--     <views:MainWindow></views:MainWindow> -->
     <!-- </Window.DataContext> -->
-    <Grid>
+    <Grid Margin="8 0 8 10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
+
         <StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBox x:Name="ProjectCreationName">MyProject</TextBox>
-                <Button Click="CreateProject">Create Project</Button>
-            </StackPanel>
-            <Button Click="OpenSettings">Open settings</Button>
-            <Button Click="SubmitBug">Submit a bug</Button>
+            <DockPanel>
+                <Label VerticalAlignment="Center" FontSize="16" DockPanel.Dock="Left" FontWeight="Bold">IOLite Launcher</Label>
+
+                <StackPanel Orientation="Horizontal">
+                    <Button FontSize="12" Height="30" FontWeight="Normal" Margin="3 3" Click="OpenSettings">Open settings</Button>
+                    <Button FontSize="12" Height="30" FontWeight="Normal" Margin="3 3" Click="SubmitBug">Submit an issue</Button>
+                    <Button FontSize="12" Height="30" FontWeight="Normal" Margin="3 3" Click="RefreshBtn">Refresh</Button>
+                </StackPanel>
+                <TextBox MinWidth="130" VerticalAlignment="Center" DockPanel.Dock="Right" x:Name="ProjectCreationName">MyProject</TextBox>
+                <Button FontSize="12" Height="30" FontWeight="Normal" DockPanel.Dock="Right" Width="Auto" Margin="10"
+                        HorizontalAlignment="Right" Click="CreateProject">
+                    Create Project
+                </Button>
+            </DockPanel>
         </StackPanel>
 
-        <DockPanel Grid.Row="1">
-            <Button Height="Auto" MinHeight="20px" DockPanel.Dock="Top" Click="OpenProject">Open Project</Button>
-            <ListView DockPanel.Dock="Bottom" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" x:Name="ProjectsList" ItemsSource="{Binding Projects}">
+        <DockPanel Grid.Row="1" Margin="0 8 0 0">
+            <ListView DockPanel.Dock="Bottom" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                      x:Name="ProjectsList" ItemsSource="{Binding Projects}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <DockPanel HorizontalAlignment="Stretch">
-                            <Button DockPanel.Dock="Right" Click="BrowseProjectPathClicked">Browse</Button>
-                            <StackPanel Orientation="Vertical">
+                        <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                            <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                                 <TextBlock FontSize="13px" Text="{Binding ProjectName}" />
                                 <TextBlock FontSize="10px" Text="{Binding Path}" />
                             </StackPanel>
+                            <Button DockPanel.Dock="Right" Height="28" FontSize="12" Margin="3 3 0 3"
+                                    FontWeight="Normal" Click="DeleteProject">
+                                Delete
+                            </Button>
+                            <Button DockPanel.Dock="Right" Height="28" FontSize="12" Margin="3 3 0 3" FontWeight="Normal"
+                                    Click="BrowseProjectPathClicked">
+                                Browse
+                            </Button>
+                            <Button DockPanel.Dock="Right" Height="28" FontSize="12" Margin="10 3 0 3" FontWeight="Normal"
+                                    Click="OpenProject">
+                                Open
+                            </Button>
                         </DockPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>

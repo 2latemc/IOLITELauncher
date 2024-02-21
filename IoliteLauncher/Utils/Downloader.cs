@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace IoLiteLauncher.Utils;
 
-public class Downloader {
+public abstract class Downloader {
     // TODO: Auto download
 
     public static void Download() {

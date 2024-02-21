@@ -11,11 +11,11 @@ namespace IoLiteLauncher.Backend;
 public class SettingsManager {
     public SettingsData SettingsData = new SettingsData();
 
-    private Instance _instance;
+    private readonly Instance _instance;
 
     public string ExecutablePath => Path.Combine(SettingsData.EnginePath, Statics.ExecutableName);
 
-    private string _settingsPath = Path.Combine(Statics.AppDataPath, "settings.json");
+    private readonly string _settingsPath = Path.Combine(Statics.AppDataPath, "settings.json");
 
     public SettingsManager() {
         _instance = Instance.Get;
@@ -23,12 +23,7 @@ public class SettingsManager {
 
     public void Save() {
         bool success = Serializer.ToFile(_settingsPath, SettingsData);
-        if (success) {
-            Debug.WriteLine("Settings saved");
-        }
-        else {
-            Debug.WriteLine("Could not save settings.");
-        }
+        Debug.WriteLine(success ? "Settings saved" : "Could not save settings.");
     }
 
     public void Load() {
@@ -39,9 +34,10 @@ public class SettingsManager {
         }
         var data = Serializer.FromFile<SettingsData>(_settingsPath);
         if (data == null) {
-            SettingsData = new SettingsData();
-            SettingsData.ProjectsPaths = new List<string>
-                { Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "IoliteProjects") };
+            SettingsData = new SettingsData {
+                ProjectsPaths = new List<string>
+                    { Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "IoliteProjects") }
+            };
         }
         else SettingsData = data;
 
@@ -85,7 +81,7 @@ public class SettingsManager {
                 }
             }
             catch {
-                MessageBox.Show("couldnt create warning files");
+                MessageBox.Show("Could not create warning files");
             }
         }
 
@@ -93,11 +89,7 @@ public class SettingsManager {
     }
 
     public bool IsValidProjectsPath(List<string>? projectsPathOverride = null) {
-        List<string> projectsList;
-        if (projectsPathOverride == null) {
-            projectsList = SettingsData.ProjectsPaths;
-        }
-        else projectsList = projectsPathOverride;
+        List<string> projectsList = projectsPathOverride ?? SettingsData.ProjectsPaths;
 
         if (projectsList.Count <= 0) return false;
 
@@ -131,7 +123,7 @@ public class SettingsManager {
                 }
             }
         }
-        catch (Exception e) {
+        catch (Exception) {
             return false;
         }
 
@@ -140,6 +132,6 @@ public class SettingsManager {
 }
 
 public class SettingsData {
-    public List<string> ProjectsPaths = new List<string>() { };
+    public List<string> ProjectsPaths = new List<string>();
     public string EnginePath = "C:\\Users\\";
 }

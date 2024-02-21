@@ -1,19 +1,35 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Windows;
 using IoLiteLauncher.Backend;
 using IoliteLauncher.Backend.Core;
-using Microsoft.VisualBasic.CompilerServices;
 using System.Windows.Controls;
 using System.Diagnostics;
-using System.Runtime.InteropServices.JavaScript;
+using System.Runtime.CompilerServices;
 using IoLiteLauncher.Utils;
 
 namespace IoliteLauncher.Views  {
-    public partial class MainWindow : Window {
-        private Instance _instance;
+    public partial class MainWindow : Window, INotifyPropertyChanged {
 
-        public ObservableCollection<ProjectsManager.ProjectData> Projects { get; set; }
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null) {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+
+        private readonly Instance _instance;
+
+        private ObservableCollection<ProjectsManager.ProjectData> _projectDatas;
+        public ObservableCollection<ProjectsManager.ProjectData> Projects {
+            get => _projectDatas;
+            set {
+                _projectDatas = value;
+                OnPropertyChanged();
+            }
+        }
+
         public MainWindow() {
             DataContext = this;
             _instance = Instance.Get;
@@ -39,12 +55,13 @@ namespace IoliteLauncher.Views  {
         }
 
         private void OpenProject(object sender, RoutedEventArgs e) {
-            ProjectsManager.ProjectData? selected = (ProjectsManager.ProjectData?)ProjectsList.SelectedItem;
-            if (selected == null) {
-                MessageBox.Show("Select a project from the list first.");
-                return;
-            }
-            _instance.ProjectsManager.OpenProject(selected.GetValueOrDefault().Path);
+            Button btn = (Button)sender;
+            var selected = (ProjectsManager.ProjectData) btn.DataContext;
+            // if (selected == null) {
+            //     MessageBox.Show("Select a project from the list fist");
+            //     return;
+            // }
+            _instance.ProjectsManager.OpenProject(selected.Path);
         }
 
         private void BrowseProjectPathClicked(object sender, RoutedEventArgs e){
@@ -71,7 +88,26 @@ namespace IoliteLauncher.Views  {
         }
 
         private void SubmitBug(object sender, RoutedEventArgs e) {
-            Downloader.OpenUrl(Statics.GithubIssuesURL);
+            Downloader.OpenUrl(Statics.GithubIssuesUrl);
+        }
+
+        private void DeleteProject(object sender, RoutedEventArgs e) {
+            Button btn = (Button)sender;
+            var projData = (ProjectsManager.ProjectData) btn.DataContext;
+
+            _instance.ProjectsManager.DeleteProject(projData);
+            RefreshProjects();
+        }
+
+        private void RefreshBtn(object sender, RoutedEventArgs e) {
+            RefreshProjects();
+        }
+
+        protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null) {
+            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+            field = value;
+            OnPropertyChanged(propertyName);
+            return true;
         }
     }
 }

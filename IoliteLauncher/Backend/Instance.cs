@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Windows.Documents.DocumentStructures;
-using IoliteLauncher.Backend.Core;
+﻿using IoliteLauncher.Backend.Core;
 
 namespace IoLiteLauncher.Backend;
 
@@ -8,12 +6,12 @@ public class Instance {
 
     private static Instance? _instance;
 
-    public ProjectsManager ProjectsManager;
-    public SettingsManager SettingsManager;
-    public LockManager LockManager;
+    public readonly ProjectsManager ProjectsManager;
+    public readonly SettingsManager SettingsManager;
+    public readonly LockManager LockManager;
 
     private Instance() {
-        if (_instance == null) _instance = this;
+        _instance ??= this;
 
         SettingsManager = new SettingsManager();
         LockManager = new LockManager(this);
@@ -22,8 +20,9 @@ public class Instance {
 
     public static Instance Get {
         get {
-            if(_instance == null) _instance = new Instance();
-            return _instance;
+            if (_instance == null) _instance = new Instance();
+            Instance nonNullableInstance = _instance;
+            return nonNullableInstance;
         }
     }
 
@@ -32,7 +31,7 @@ public class Instance {
     }
 
     public void Shutdown() {
-        _instance.ProjectsManager.CloseProject();
+        _instance?.ProjectsManager.CloseProject();
         SettingsManager.Save();
     }
 }
