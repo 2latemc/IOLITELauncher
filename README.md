@@ -4,7 +4,7 @@
 *This launcher is in early alpha. Make sure to backup all your projects before working with this.*
 
 ## Installation:
-- Download the [latest release](https://github.com/2latemc/ioliteLauncher/releases/latest) of the launcher
+- Download the [latest release](https://github.com/2latemc/ioliteLauncher/releases/latest) of the launcher & launch the setup
 - Make sure you have a **fresh** install of the engine. Otherwise things will break.
 - Make sure you are running on the release [V.0.4.8](https://media.missing-deadlines.com/iolite/builds/release/iolite-v0.4.8.exe) of the Engine as things might not work with later engine versions (Currently (20.02.2024) this is the latest release)
 - **Never** open the Iolite.exe manually, always open a proejct through the launcher
